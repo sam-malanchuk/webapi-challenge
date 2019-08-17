@@ -4,6 +4,10 @@ const Projects = require("./data/helpers/projectModel.js");
 
 const router = express.Router();
 
+router.get('/:id', checkProjectID, async (req, res) => {
+    res.status(200).json(req.project);
+});
+
 router.get('/', async (req, res) => {
     try {
         const projects = await Projects.get();
@@ -15,8 +19,17 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', checkProjectID, async (req, res) => {
-    res.status(200).json(req.project);
+router.get('/:id/actions', checkProjectID, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const actions = await Projects.getProjectActions(id);
+        res.status(200).json({actions});
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error retrieving the project actions'
+        })
+    }
 });
 
 router.post('/', async (req, res) => {
