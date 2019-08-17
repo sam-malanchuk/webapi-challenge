@@ -16,16 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', checkProjectID, async (req, res) => {
-    const { id } = req.params;
-    try {
-        const project = await Projects.get(id);
-        console.log(project);
-        res.status(200).json(project);
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error retrieving the projects'
-        })
-    }
+    res.status(200).json(req.project);
 });
 
 function checkProjectID (req, res, next) {
