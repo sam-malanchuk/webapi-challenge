@@ -37,6 +37,26 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.put('/:id', checkActionID, async (req, res) => {
+    const actionData = req.body;
+    const { id } = req.params;
+
+    try {
+        if(!actionData.description && !actionData.notes) {
+            res.status(400).json({
+                message: 'Error data must include a description or notes(or both) field'
+            })
+        } else {
+            const action = await Actions.update(id, req.body);
+            res.status(201).json({ message: "The action has been successfully updated!" });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error updating the action'
+        })
+    }
+});
+
 function checkActionID (req, res, next) {
     const { id } = req.params;
 
