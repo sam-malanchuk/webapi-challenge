@@ -1,6 +1,7 @@
 const express = require('express');
 
 const Actions = require("./data/helpers/actionModel.js");
+const Projects = require("./data/helpers/projectModel.js");
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', checkProjectID, async (req, res) => {
     const actionData = req.body;
     try {
         if(actionData.project_id && actionData.description && actionData.notes) {
@@ -88,6 +89,27 @@ function checkActionID (req, res, next) {
         .catch(error => {
             res.status(500).json({
                 message: 'Error retrieving the Action'
+            })
+        })
+}
+
+function checkProjectID (req, res, next) {
+    const id = req.body.project_id;
+
+    Projects.get(id)
+        .then(project => {
+            if(project !== null) {
+                req.project = project;
+                next();
+            } else {
+                res.status(404).json({
+                    message: 'Project ID not found'
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: 'Error retrieving the project ID'
             })
         })
 }
