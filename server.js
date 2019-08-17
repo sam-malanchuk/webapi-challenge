@@ -1,6 +1,7 @@
 const express = require('express');
 
 const projectsRouter = require("./projectsRouter.js");
+const actionsRouter = require("./actionsRouter.js");
 
 const server = express();
 
@@ -8,6 +9,7 @@ server.use(express.json());
 
 server.use(logger);
 server.use('/api/projects', projectsRouter);
+server.use('/api/actions', actionsRouter);
 
 server.get('/', (req, res) => {
     res.send("Server is up and running!");
