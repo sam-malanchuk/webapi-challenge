@@ -37,6 +37,19 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.put('/:id', checkProjectID, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const project = Projects.update(id, req.body);
+        res.status(201).json({ message: "The project has been successfully updated!" });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error updating the project'
+        })
+    }
+});
+
 function checkProjectID (req, res, next) {
     const { id } = req.params;
 
