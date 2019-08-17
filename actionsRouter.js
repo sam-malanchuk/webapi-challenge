@@ -57,12 +57,26 @@ router.put('/:id', checkActionID, async (req, res) => {
     }
 });
 
+router.delete('/:id', checkActionID, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deleted = await Actions.remove(id);
+        res.status(200).json({ message: "The action has been successfully deleted!" });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error deleting the action'
+        })
+    }
+});
+
 function checkActionID (req, res, next) {
     const { id } = req.params;
 
     Actions.get(id)
         .then(action => {
-            if(action !== null) {
+            console.log('resonose from checkActionID:', action);
+            if(action) {
                 req.action = action;
                 next();
             } else {
