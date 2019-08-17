@@ -22,12 +22,12 @@ router.get('/:id', checkProjectID, async (req, res) => {
 router.post('/', async (req, res) => {
     const projectData = req.body;
     try {
-        if(projectData.name && projectData.description && (projectData.completed !== undefined)) {
+        if(projectData.name && projectData.description) {
             const project = await Projects.insert(projectData);
             res.status(201).json({project});
         } else {
             res.status(400).json({
-                message: 'Error, data must include:  name, description, completed'
+                message: 'Error data must include a name and description'
             })
         }
     } catch (error) { 
@@ -41,11 +41,24 @@ router.put('/:id', checkProjectID, async (req, res) => {
     const { id } = req.params;
 
     try {
-        const project = Projects.update(id, req.body);
+        const project = await Projects.update(id, req.body);
         res.status(201).json({ message: "The project has been successfully updated!" });
     } catch (error) {
         res.status(500).json({
             message: 'Error updating the project'
+        })
+    }
+});
+
+router.delete('/:id', checkProjectID, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deleted = await Projects.remove(id);
+        res.status(200).json({ message: "The project has been successfully deleted!" });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error deleting the project'
         })
     }
 });
